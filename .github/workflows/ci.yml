@@ -29,4 +29,4 @@ jobs:
             - name: Get info about K6 version
               run: make info
             - name: Stop the docker images
-              run: make stop-test
+              run: make stop
