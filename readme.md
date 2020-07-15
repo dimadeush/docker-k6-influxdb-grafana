@@ -96,5 +96,5 @@ Notes: Please see more commands in Makefile
 2. Commit often, and write descriptive commit messages, so its easier to follow steps taken when reviewing.
 3. Push this branch to the repo and create pull request into `develop` to get feedback, with the format `feature/{ticketNo}` - "Short descriptive title of Jira task".
 4. Iterate as needed.
-5. Make sure that "All checks have passed" on GitLab CI and status is green.
+5. Make sure that "All checks have passed" on CircleCI(or another one in case you are not using CircleCI) and status is green.
 6. When PR is approved, it will be squashed & merged, into `develop`.
