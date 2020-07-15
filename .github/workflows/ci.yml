@@ -1,0 +1,32 @@
+name: k6
+
+on:
+    push:
+        branches:
+            - master
+            - develop
+    pull_request:
+        branches:
+            - master
+            - develop
+    release:
+        types: [published]
+
+jobs:
+
+    build:
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v1
+            - name: Build the docker images
+              run: docker-compose -f docker-compose.yml build
+            - name: Start the docker images
+              run: make start
+            - name: Check running containers
+              run: docker ps -a
+            - name: Get info about K6 version
+              run: make info
+            - name: Stop the docker images
+              run: make stop-test

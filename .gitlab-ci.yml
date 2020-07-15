@@ -1,0 +1,33 @@
+image: docker:latest
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  GITLAB_CI: 1
+
+services:
+  - docker:dind
+
+before_script:
+  - apk update
+  - apk upgrade
+  - apk add --no-cache make bash docker-compose && rm -rf /var/cache/apk/*
+
+stages:
+  - build
+
+.general_scripts: &general_scripts
+  - make info
+
+build:
+  stage: build
+  script:
+    - docker-compose build
+    - make start
+    - docker ps -a
+    - *general_scripts
+    - make stop
+  only:
+    - merge_requests
+    - master
+    - develop

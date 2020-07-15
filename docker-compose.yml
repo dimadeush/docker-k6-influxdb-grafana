@@ -1,0 +1,49 @@
+version: '3.4'
+
+services:
+  influxdb:
+    image: influxdb:latest
+    environment:
+      - INFLUXDB_DB=k6
+    container_name: influxdb
+    ports:
+      - 8086:8086
+    networks:
+      - k6
+      - grafana
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+    container_name: grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana-datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+    networks:
+      - grafana
+
+  k6:
+    image: loadimpact/k6:latest
+    environment:
+      - K6_OUT=influxdb=http://influxdb:8086/k6
+    container_name: k6
+    ports:
+      - 6565:6565
+    volumes:
+      - ./scripts:/scripts
+    depends_on:
+      - influxdb
+      - grafana
+    links:
+      - influxdb
+      - grafana
+    networks:
+      - k6
+
+networks:
+  k6:
+  grafana:

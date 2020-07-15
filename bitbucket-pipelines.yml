@@ -1,0 +1,16 @@
+image: docker:stable
+
+options:
+  docker: true
+
+pipelines:
+  default:
+    - step:
+        script:
+          - chmod +x .bitbucket/dependencies.sh
+          - .bitbucket/dependencies.sh
+          - docker-compose -f docker-compose.yml build
+          - make start
+          - docker ps -a
+          - make info
+          - make stop

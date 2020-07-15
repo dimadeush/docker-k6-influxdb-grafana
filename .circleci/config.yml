@@ -1,0 +1,36 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/html
+    machine: true
+    branches:
+        ignore:
+          - develop
+    steps:
+      - checkout
+
+      - run:
+          name: Start containers
+          command: |
+            make start
+
+      - run:
+          name: Verify it's working
+          command: |
+            docker ps -a
+
+      - run:
+          name: Get info about K6 version
+          command: |
+            make info
+
+      - run:
+          name: Stop containers
+          command: |
+            make stop
+
+      - store_artifacts:
+          path: reports
+
+      - store_test_results:
+          path: reports
